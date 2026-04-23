@@ -59,4 +59,19 @@ public class MoneyTransferTest {
         assertEquals(expectedBalanceFirstCard, actualBalanceFirstCard);
     }
 
+    @Test
+    void shouldAmountMoreBalance() {
+        var firstCardBalance = dashboardPage.getCardBalance(firstCardInfo);
+        var secondCardBalance = dashboardPage.getCardBalance(secondCardInfo);
+        var amount = generateNegativeAmount(secondCardBalance);
+        var transferPage = dashboardPage.selectCardToTransfer(firstCardInfo);
+        transferPage.makeAnyTransfer(String.valueOf(amount), secondCardInfo);
+        transferPage.transferFail("Выполнена попытка перевода суммы, превышающей остаток на карте списания");
+        var actualBalanceFirstCard = dashboardPage.getCardBalance(firstCardInfo);
+        var actualBalanceSecondCard = dashboardPage.getCardBalance(secondCardInfo);
+
+        assertEquals(firstCardBalance, actualBalanceFirstCard);
+        assertEquals(secondCardBalance, actualBalanceSecondCard);
+    }
+
 }
